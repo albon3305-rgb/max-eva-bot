@@ -13,7 +13,7 @@ app.listen(PORT, () => {
 });
 
 const MAX_TOKEN = 'f9LHodD0cOIp9eHOCQb4IQNMf3L6hh9RKbUZP30aaual-1kQdr2FCgpuSBhE-IIB8YewzL3CSYdQO5MRxvwF';
-const GEMINI_KEY = 'AQ.Ab8RN6JFm_P-oBULGN8JlF8GJVCjEZJddcd6Qz44z5khQQjvIA';
+const GEMINI_KEY = 'AQ.Ab8RN6IuzNVQp62CzZyy5b6RIbTActuSgKLuyyk3QTqB7e-HJw';
 
 const bot = new Bot(MAX_TOKEN);
 const ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
