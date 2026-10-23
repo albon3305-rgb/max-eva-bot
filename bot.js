@@ -299,7 +299,6 @@ async function sendMainMenu(ctx) {
 
 bot.catch((err) => console.error('Ошибка MAX:', err));
 bot.on('bot_started', sendMainMenu);
-bot.command('start', sendMainMenu);
 
 bot.action('main_menu', sendMainMenu);
 
