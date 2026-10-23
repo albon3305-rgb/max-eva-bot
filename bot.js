@@ -242,7 +242,7 @@ async function generatePhotoAndSend(ctx, rawText, isAlreadyCleanEnglishPrompt = 
   state.lastPrompt = finalEnglishPrompt;
 
   const seed = Math.floor(Math.random() * 1000000);
-  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanForUrl)}?width=768&height=1024&seed=${seed}&model=flux&nologo=true`;
+  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanForUrl)}?width=768&height=1024&seed=${seed}&nologo=true`;
 
   const imageAttachment = await createMaxImageAttachment(imageUrl);
 
