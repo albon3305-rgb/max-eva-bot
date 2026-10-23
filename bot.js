@@ -1,9 +1,16 @@
-cat << 'EOF' > bot.js
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 import fs from 'fs';
+import express from 'express';
 import { Bot, Keyboard } from '@maxhub/max-bot-api';
 import { GoogleGenAI } from '@google/genai';
+
+const app = express();
+app.get('/', (req, res) => res.send('Eva AI Bot is alive and running 24/7!'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Web keep-alive server is listening on port ${PORT}`);
+});
 
 const MAX_TOKEN = 'f9LHodD0cOIp9eHOCQb4IQNMf3L6hh9RKbUZP30aaual-1kQdr2FCgpuSBhE-IIB8YewzL3CSYdQO5MRxvwF';
 const GEMINI_KEY = 'AQ.Ab8RN6JFm_P-oBULGN8JlF8GJVCjEZJddcd6Qz44z5khQQjvIA';
@@ -101,7 +108,6 @@ function getAfterGenKeyboard() {
   ]);
 }
 
-// Надежная функция скачивания картинки и загрузки напрямую на сервер MAX
 async function createMaxImageAttachment(imageUrl) {
   const response = await fetch(imageUrl, {
     headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
@@ -112,7 +118,6 @@ async function createMaxImageAttachment(imageUrl) {
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Сохраняем во временный файл и загружаем через официальный загрузчик MAX
   const tempFile = `./temp_${Date.now()}.jpg`;
   fs.writeFileSync(tempFile, buffer);
 
@@ -122,7 +127,6 @@ async function createMaxImageAttachment(imageUrl) {
     return uploaded.toJson();
   } catch (uploadErr) {
     if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-    // Если метод принимает прямой url
     const uploadedByUrl = await bot.api.uploadImage({ url: imageUrl });
     return uploadedByUrl.toJson();
   }
@@ -180,7 +184,6 @@ async function askGemini(contents, customSystemInstruction = SYSTEM_PROMPT) {
   for (const modelName of MODELS) {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        console.log(`Пробую модель ${modelName} (попытка ${attempt})...`);
         const response = await ai.models.generateContent({
           model: modelName,
           contents: contents,
@@ -225,7 +228,6 @@ async function generatePhotoAndSend(ctx, rawText, isAlreadyCleanEnglishPrompt = 
 
   const subjectReplacement = state.faceDescription || 'a stylish person';
 
-  // Делаем промпт компактным и чистым для быстрой генерации
   const cleanForUrl = finalEnglishPrompt
     .replace(/^Prompt:\s*/i, '')
     .split(/Negative prompt:/i)[0]
@@ -242,7 +244,6 @@ async function generatePhotoAndSend(ctx, rawText, isAlreadyCleanEnglishPrompt = 
   const seed = Math.floor(Math.random() * 1000000);
   const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanForUrl)}?width=768&height=1024&seed=${seed}&model=flux&nologo=true`;
 
-  console.log('Скачиваю сгенерированное фото:', imageUrl);
   const imageAttachment = await createMaxImageAttachment(imageUrl);
 
   await ctx.reply(`✨ **Готово! Сгенерировано по промпту:**\n\n${cleanForUrl}`, {
@@ -430,5 +431,4 @@ bot.on('message_created', async (ctx) => {
 });
 
 bot.start();
-console.log('Бот с прямой загрузкой фото в MAX запущен!');
-EOF
+console.log('Облачный бот на Render запущен!');
