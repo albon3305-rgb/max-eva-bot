@@ -432,4 +432,3 @@ bot.on('message_created', async (ctx) => {
 bot.start();
 console.log('Бот с прямой загрузкой фото в MAX запущен!');
 EOF
-node bot.js
